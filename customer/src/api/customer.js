@@ -7,14 +7,14 @@ module.exports = (app) => {
     const service = new CustomerService();
 
 
-    app.post('/customer/signup', async (req,res,next) => {
+    app.post('/signup', async (req,res,next) => {
         const { email, password, phone } = req.body;
         const { data } = await service.SignUp({ email, password, phone}); 
         res.json(data);
 
     });
 
-    app.post('/customer/login',  async (req,res,next) => {
+    app.post('/login',  async (req,res,next) => {
         
         const { email, password } = req.body;
 
@@ -24,7 +24,7 @@ module.exports = (app) => {
 
     });
 
-    app.post('/customer/address', UserAuth, async (req,res,next) => {
+    app.post('/address', UserAuth, async (req,res,next) => {
         
         const { _id } = req.user;
 
@@ -38,7 +38,7 @@ module.exports = (app) => {
     });
      
 
-    app.get('/customer/profile', UserAuth ,async (req,res,next) => {
+    app.get('/profile', UserAuth ,async (req,res,next) => {
 
         const { _id } = req.user;
         const { data } = await service.GetProfile({ _id });
@@ -46,14 +46,14 @@ module.exports = (app) => {
     });
      
 
-    app.get('/customer/shoping-details', UserAuth, async (req,res,next) => {
+    app.get('/shoping-details', UserAuth, async (req,res,next) => {
         const { _id } = req.user;
        const { data } = await service.GetShopingDetails(_id);
 
        return res.json(data);
     });
     
-    app.get('/customer/wishlist', UserAuth, async (req,res,next) => {
+    app.get('/wishlist', UserAuth, async (req,res,next) => {
         const { _id } = req.user;
         const { data } = await service.GetWishList( _id);
         return res.status(200).json(data);
