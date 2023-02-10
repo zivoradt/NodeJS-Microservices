@@ -33,7 +33,8 @@ class ProductService {
     async GetProductDescription(productId){
         
         const product = await this.repository.FindById(productId);
-        return FormateData(product)
+        return FormateData(product);
+        
     }
 
     async GetProductsByCategory(category){
@@ -50,7 +51,8 @@ class ProductService {
     }
 
     async GetProductById(productId){
-        return await this.repository.FindById(productId);
+        const product = await this.repository.FindById(productId);
+        return FormateData(product);
     }
      
     async GetProductPayload(userId, {productId, qty}, event){

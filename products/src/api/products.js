@@ -8,7 +8,7 @@ module.exports = (app) => {
     
 
 
-    app.post('/product/create', async(req,res,next) => {
+    app.post('/create', async(req,res,next) => {
 
         const { name, desc, type, unit,price, available, suplier, banner } = req.body; 
         // validation
@@ -34,13 +34,14 @@ module.exports = (app) => {
     app.get('/:id', async(req,res,next) => {
         
         const productId = req.params.id;
+        console.log(req.params.id);
 
         try {
             const { data } = await service.GetProductDescription(productId);
             return res.status(200).json(data);
 
-        } catch (error) {
-            return res.status(404).json({error});
+        } catch (err) {
+            next(err);
 
         }
 
@@ -64,7 +65,7 @@ module.exports = (app) => {
         // Sent to Customer Services
         PublishingCustomerEvent(data);
          
-        res.status(200).json(data.data.product);
+        return res.status(200).json(data.data.product);
     });
     
     app.delete('/wishlist/:id',UserAuth, async (req,res,next) => {
@@ -72,35 +73,62 @@ module.exports = (app) => {
         const { _id } = req.user;
         const productId = req.params.id;
     
+        // Get payload //  sent to Customer Services
+        const {data} = await service.GetProductPayload(_id, {productId}, 'REMOVE_FROM_WISHLIST');
 
-        const product = await service.GetProductById(productId);
-        
-        await customerService.AddToWishlist(_id, product)
+        PublishingCustomerEvent(data);
 
-        res.status(200).json(product);
+        return res.status(200).json(data.data.product);
     });
 
 
     app.put('/cart',UserAuth, async (req,res,next) => {
 
-        const { _id, qty } = req.body;
-         
-        const product = await service.GetProductById(_id);
+        const { _id } = req.user;
 
-        await customerService.ManageCart(req.user._id, product, qty, false);
+        try{
+             // Get payload //  sent to Customer Services
+        const {data} = await service.GetProductPayload(_id, {productId: req.body._id, qty: req.body.qty}, 'ADD_TO_CART');
+        // Sent to Customer SErvice
+        PublishingCustomerEvent(data);
 
-        res.status(200).json(product);
+        // Sent to Shopping Service
+        PublishingShoppingEvent(data);
+
+        const response = {
+            product: data.data.product,
+            qty: data.data.qty
+        }
+
+        res.status(200).json(response);
+    }catch(err){
+        next(err);
+    }
     });
     
     app.delete('/cart/:id',UserAuth, async (req,res,next) => {
 
         const { _id } = req.user;
+        const productId = req.params.id;
 
-        const product = await service.GetProductById(req.params.id);
+        try{
+            // Get payload //  sent to Customer Services
+        const {data} = await service.GetProductPayload(_id, {productId}, 'REMOVE_FROM_CART');
+        // Sent to Customer SErvice
+        PublishingCustomerEvent(data);
+      
+        // Sent to Shopping Service
+        PublishingShoppingEvent(data);
 
-        await customerService.ManageCart(_id, product, 0 , true);
+        const response = {
+            product: data.data.product,
+            qty: data.data.qty
+        }
          
-        res.status(200).json(product);
+        res.status(200).json(response);
+    }catch(err){
+        next(err);
+    }
     });
 
     //get Top products and category

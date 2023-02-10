@@ -9,9 +9,9 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/customer', proxy('http://localhost:8001'));
-app.use('/products', proxy('http://localhost:8002')); // Products
+app.use('/product', proxy('http://localhost:8002')); // Products
 app.use('/shopping', proxy('http://localhost:8003'));
 
 app.listen(PORT, ()=>{
-    console.log(`Customer lisening to Port: ${PORT}`);
+    console.log(`APIGateway lisening to Port: ${PORT}`);
 })

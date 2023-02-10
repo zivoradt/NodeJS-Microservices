@@ -1,7 +1,7 @@
 
 module.exports = (app)=>{
 
-    const service = new CustomerService();
+
 
     app.use('/app-events', async (req, res, next)=>{
         

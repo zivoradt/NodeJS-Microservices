@@ -22,7 +22,11 @@ class ProductRepository {
    
     async FindById(id){
         
-       return await ProductModel.findById(id);
+      try{
+         return await ProductModel.findById(id);
+        }catch(err){
+            throw APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Get Product');
+        }
 
     }
 
