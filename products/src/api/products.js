@@ -62,6 +62,7 @@ module.exports = (app) => {
         // Get payload //  sent to Customer Services
         const {data} = await service.GetProductPayload(_id, {productId: req.body._id}, 'ADD_TO_WISHLIST');
 
+        
         // Sent to Customer Services
         PublishingCustomerEvent(data);
          

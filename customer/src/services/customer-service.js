@@ -1,4 +1,4 @@
-const { CustomerRepository } = require("../database");
+const { CustomerRepository } = require("../database/");
 const { FormateData, GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword } = require('../utils');
 
 // All Business logic will be here
