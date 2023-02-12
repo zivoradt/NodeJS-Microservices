@@ -2,19 +2,14 @@ const express = require('express');
 const cors  = require('cors');
 const { customer, appEvents } = require('./api');
 
-module.exports = async (app) => {
+module.exports = async (app, channel) => {
 
     app.use(express.json());
     app.use(cors());
-    app.use(express.static(__dirname + '/public'))
-
-   
-
-    // Lisen to evennts
-    appEvents(app);
+    app.use(express.static(__dirname + '/public'));
 
     //api
-    customer(app);
+    customer(app, channel);
     // error handling
     
     
