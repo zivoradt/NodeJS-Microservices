@@ -5,8 +5,6 @@ const amqplib = require('amqplib');
 const { APP_SECRET, QUEUE_NAME, MESSAGE_BROKER_URL, EXCHANGE_NAME, CUSTOMER_BINDING_KEY } = require('../config');
 
 
-const { APP_SECRET } = require('../config');
-
 //Utility functions
 module.exports.GenerateSalt = async() => {
         return await bcrypt.genSalt()    
@@ -80,8 +78,9 @@ module.exports.FormateData = (data) => {
         channel.bindQueue(appQueue.queue, EXCHANGE_NAME, CUSTOMER_BINDING_KEY);
 
         channel.consume(appQueue.queue, data =>{
-            console.log('Recived data');
+            console.log('Recived data in Customer service');
             console.log(data.content.toString());
+            service.SubscribeEvents(data.content.toString());
             channel.ack(data);
         })
     }

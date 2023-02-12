@@ -8,7 +8,7 @@ class ShoppingService {
         this.repository = new ShoppingRepository();
     }
 
-    async GetCart({ _id }){
+    async getCart({ _id }){
         
         const cartItems = await this.repository.Cart(_id);
         return FormateData(cartItems);
@@ -43,7 +43,8 @@ class ShoppingService {
      
 
     async SubscribeEvents(payload){
- 
+        
+        payload = JSON.parse(payload);
         
         const { event, data } = payload;
         const { userId, product, qty } = data;
